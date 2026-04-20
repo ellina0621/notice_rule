@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>注意股異常標準完整說明</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1629;
+    --bg3: #151d35;
+    --card: #1a2340;
+    --card-hover: #1e2a4a;
+    --border: #2a3a60;
+    --accent: #e84560;
+    --accent2: #f5a623;
+    --accent3: #4fc3f7;
+    --accent4: #69f0ae;
+    --text: #e8eaf6;
+    --text2: #9aa5c4;
+    --text3: #6b7a9e;
+    --num: #f5a623;
+    --tag-bg: #1e2f55;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1a3a 50%, #0a0e1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(232,69,96,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(79,195,247,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  header p {
+    color: var(--text2);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* NAV TABS */
+  .nav-wrap {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-wrap::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text3);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .nav-btn .num-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; height: 20px;
+    background: var(--tag-bg);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    margin-right: 6px;
+    color: var(--text3);
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active {
+    color: var(--accent3);
+    border-bottom-color: var(--accent3);
+  }
+  .nav-btn.active .num-badge {
+    background: var(--accent3);
+    color: var(--bg);
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  /* SECTION PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* CRITERION CARD */
+  .criterion-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .criterion-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .criterion-num.blue { background: var(--accent3); }
+  .criterion-num.green { background: var(--accent4); }
+  .criterion-num.orange { background: var(--accent2); }
+  .criterion-title h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .criterion-title p {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+
+  /* CONDITIONS BLOCK */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .cond-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    position: relative;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .cond-card:hover {
+    background: var(--card-hover);
+    border-color: #3a4e80;
+  }
+  .cond-card .cond-index {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .cond-card .cond-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .cond-card .cond-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text2);
+  }
+  .cond-card.must {
+    border-left: 3px solid var(--accent);
+  }
+  .cond-card.must .cond-label { color: var(--accent); }
+
+  /* FORMULA HIGHLIGHT */
+  .formula {
+    background: #0d1a30;
+    border: 1px solid #2a3f70;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent3);
+    line-height: 1.8;
+  }
+  .formula .var { color: var(--accent2); }
+  .formula .op { color: #c084fc; }
+  .formula .val { color: var(--accent4); }
+
+  /* VALUE PILL */
+  .val-pill {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 2px;
+  }
+  .val-pill.red {
+    background: rgba(232,69,96,0.15);
+    border-color: rgba(232,69,96,0.3);
+    color: #f87d95;
+  }
+  .val-pill.blue {
+    background: rgba(79,195,247,0.12);
+    border-color: rgba(79,195,247,0.25);
+    color: var(--accent3);
+  }
+  .val-pill.green {
+    background: rgba(105,240,174,0.12);
+    border-color: rgba(105,240,174,0.25);
+    color: var(--accent4);
+  }
+
+  /* EXCEPTION BLOCK */
+  .exception-block {
+    background: #0f1525;
+    border: 1px solid #1e2e50;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+  .exception-block .exc-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .exception-block .exc-title::before {
+    content: '⚠';
+    font-size: 14px;
+    color: var(--accent2);
+  }
+  .exc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .exc-list li {
+    font-size: 12.5px;
+    color: var(--text3);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .exc-list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text3);
+  }
+
+  /* SUB-VARIANT TABS */
+  .variant-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .variant-tab {
+    padding: 6px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text3);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .variant-tab:hover { color: var(--text); border-color: #3a4e80; }
+  .variant-tab.active {
+    background: rgba(79,195,247,0.12);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  .variant-panel { display: none; }
+  .variant-panel.active { display: block; }
+
+  /* AND / OR connector */
+  .connector {
+    text-align: center;
+    padding: 6px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+  }
+  .connector.and { color: var(--accent); }
+  .connector.or { color: var(--accent4); }
+
+  /* SMALL NOTE */
+  .note {
+    font-size: 12px;
+    color: var(--text3);
+    background: rgba(79,195,247,0.06);
+    border-left: 2px solid var(--accent3);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 12px 0;
+    line-height: 1.7;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header, main { padding: 24px 20px; }
+    .nav-wrap { padding: 0 16px; }
+    .conditions-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">TPEx · 注意股</div>
+  <h1>有價證券異常交易<br>注意標準完整說明</h1>
+  <p>依據「公布或通知注意交易資訊暨處置作業要點」第四條各款，整理各情形之詳細計算規則與除外條件</p>
+</header>
+
+<div class="nav-wrap">
+  <button class="nav-btn active" onclick="showPanel(0, this)"><span class="num-badge">一</span>累積漲跌異常</button>
+  <button class="nav-btn" onclick="showPanel(1, this)"><span class="num-badge">二</span>起迄漲跌異常</button>
+  <button class="nav-btn" onclick="showPanel(2, this)"><span class="num-badge">三</span>漲跌＋量放大</button>
+  <button class="nav-btn" onclick="showPanel(3, this)"><span class="num-badge">四</span>漲跌＋週轉率高</button>
+  <button class="nav-btn" onclick="showPanel(4, this)"><span class="num-badge">五</span>漲跌＋券商集中</button>
+  <button class="nav-btn" onclick="showPanel(5, this)"><span class="num-badge">六</span>本益比＋淨值比</button>
+  <button class="nav-btn" onclick="showPanel(6, this)"><span class="num-badge">七</span>漲跌＋券資比</button>
+  <button class="nav-btn" onclick="showPanel(7, this)"><span class="num-badge">八</span>TDR溢折價</button>
+</div>
+
+<main>
+
+<!-- ① 累積漲跌異常 -->
+<div class="panel active" id="panel-0">
+  <div class="criterion-title">
+    <span class="criterion-num">第一款</span>
+    <div>
+      <h2>累積最後成交價漲跌百分比異常</h2>
+      <p>近六個營業日累積漲跌幅，與大盤及同類股差幅均過大，符合下列兩種情形之一即觸發</p>
+    </div>
+  </div>
+
+  <div class="variant-tabs">
+    <div class="variant-tab active" onclick="showVariant('c1',0,this)">情形一：超過 30%</div>
+    <div class="variant-tab" onclick="showVariant('c1',1,this)">情形二：達 23% 且價差 ≥ 40元</div>
+  </div>
+
+  <div id="c1-0" class="variant-panel active">
+    <div class="section-label">觸發條件（需全部符合）</div>
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">條件 A：累積漲跌幅</div>
+        <div class="cond-body">
+          近 <span class="val-pill">6</span> 個營業日（含當日）累積最後成交價漲跌幅
+          <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">30%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">條件 B：與全體差幅</div>
+        <div class="cond-body">
+          與全體有價證券同期平均值的差幅
+          <div class="formula"><span class="op">差幅</span> <span class="op">≥</span> <span class="val">20%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">條件 C：與同類差幅</div>
+        <div class="cond-body">
+          與同類有價證券同期平均值的差幅
+          <div class="formula"><span class="op">差幅</span> <span class="op">≥</span> <span class="val">20%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="c1-1" class="variant-panel">
+    <div class="section-label">觸發條件（需全部符合）</div>
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">條件 A：累積漲跌幅</div>
+        <div class="cond-body">
+          近 <span class="val-pill">6</span> 個營業日累積最後成交價漲跌幅
+          <div class="formula"><span class="op">|漲跌%|</span> <span class="op">≥</span> <span class="val">23%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">條件 B：與全體差幅</div>
+        <div class="cond-body">
+          與全體有價證券同期平均值的差幅
+          <div class="formula"><span class="op">差幅</span> <span class="op">≥</span> <span class="val">20%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">條件 C：與同類差幅</div>
+        <div class="cond-body">
+          與同類有價證券同期平均值的差幅
+          <div class="formula"><span class="op">差幅</span> <span class="op">≥</span> <span class="val">20%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">條件 D：起迄價差</div>
+        <div class="cond-body">
+          近6日起、迄兩個營業日之最後成交價價差
+          <div class="formula"><span class="op">價差</span> <span class="op">≥</span> <span class="val">NT$40</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形（符合下列任一者不觸發）</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>計算期間有除權、除息等非交易原因造成價格變動，計算時排除該因素</li>
+      <li>同類有價證券未達 <span class="val-pill">5</span> 家者，不適用同類條件</li>
+      <li>本益比為負值或達 <span class="val-pill">65倍</span> 者，不適用同類條件</li>
+      <li>當日收盤價未滿 <span class="val-pill red">NT$5</span>（認購售權證除外）</li>
+      <li>前一營業日溢(折)價比率未超過 10%，或方向與標準相反</li>
+      <li>認購(售)權證：等價交易未成交、當日漲跌為零或方向相反</li>
+      <li>實收資本額未達 <span class="val-pill">NT$8,000萬</span> 之發行公司股票，不適用全體及同類條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ② 起迄漲跌異常 -->
+<div class="panel" id="panel-1">
+  <div class="criterion-title">
+    <span class="criterion-num blue">第二款</span>
+    <div>
+      <h2>起迄兩個營業日最後成交價漲跌百分比異常</h2>
+      <p>以較長期間（30/60/90日）的首末兩日價格計算，若漲跌幅過大且與大盤差幅過大則觸發</p>
+    </div>
+  </div>
+
+  <div class="variant-tabs">
+    <div class="variant-tab active" onclick="showVariant('c2',0,this)">30日 &gt;100%</div>
+    <div class="variant-tab" onclick="showVariant('c2',1,this)">60日 &gt;140%</div>
+    <div class="variant-tab" onclick="showVariant('c2',2,this)">90日 &gt;160%</div>
+  </div>
+
+  <div id="c2-0" class="variant-panel active">
+    <div class="section-label">30個營業日標準</div>
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">漲跌幅門檻</div>
+        <div class="cond-body">
+          近 <span class="val-pill">30</span> 日起迄成交價漲跌幅
+          <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">100%</span></div>
+          若收盤價未滿 NT$5，門檻提高至 <span class="val-pill">120%</span>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（上漲）</div>
+        <div class="cond-body">
+          漲幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill green">&gt; 當日參考價</span>
+        </div>
+      </div>
+      <div class="connector or">— 或 —</div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（下跌）</div>
+        <div class="cond-body">
+          跌幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill red">&lt; 當日參考價</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="c2-1" class="variant-panel">
+    <div class="section-label">60個營業日標準</div>
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">漲跌幅門檻</div>
+        <div class="cond-body">
+          近 <span class="val-pill">60</span> 日起迄成交價漲跌幅
+          <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">140%</span></div>
+          若收盤價未滿 NT$5，門檻提高至 <span class="val-pill">180%</span>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（上漲）</div>
+        <div class="cond-body">
+          漲幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill green">&gt; 當日參考價</span>
+        </div>
+      </div>
+      <div class="connector or">— 或 —</div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（下跌）</div>
+        <div class="cond-body">
+          跌幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill red">&lt; 當日參考價</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="c2-2" class="variant-panel">
+    <div class="section-label">90個營業日標準</div>
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">漲跌幅門檻</div>
+        <div class="cond-body">
+          近 <span class="val-pill">90</span> 日起迄成交價漲跌幅
+          <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">160%</span></div>
+          若收盤價未滿 NT$5，門檻提高至 <span class="val-pill">240%</span>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（上漲）</div>
+        <div class="cond-body">
+          漲幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill green">&gt; 當日參考價</span>
+        </div>
+      </div>
+      <div class="connector or">— 或 —</div>
+      <div class="cond-card must">
+        <div class="cond-label">差幅條件（下跌）</div>
+        <div class="cond-body">
+          跌幅與全體及同類平均值的差幅 <span class="val-pill">≥80%</span><br>
+          且當日成交價 <span class="val-pill red">&lt; 當日參考價</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>非分離型附認股權公司債、特別股、認購(售)權證、認股權憑證</li>
+      <li>近30日內已依第一款公布注意，且近6日累積漲跌幅未超過 <span class="val-pill">27%</span>（或超過但差幅未達標，或方向相反）</li>
+      <li>近60日內曾依第六條發布處置（且原因僅為本款），再次達標但近6日累積幅度未超過 <span class="val-pill">10%</span>（或差幅未達標，或方向相反）</li>
+      <li>計算期間有除權、除息等非交易原因，計算時排除</li>
+      <li>同類未達5家者不適用類股條件；本益比負值或達65倍不適用類股條件</li>
+      <li>前一營業日溢(折)價比率未超過10%，或方向相反</li>
+      <li>實收資本額未達 NT$8,000萬 之股票不適用全體及同類條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ③ 漲跌 + 成交量放大 -->
+<div class="panel" id="panel-2">
+  <div class="criterion-title">
+    <span class="criterion-num orange">第三款</span>
+    <div>
+      <h2>累積漲跌異常，且當日成交量較日平均異常放大</h2>
+      <p>需同時符合「價格異常」與「量能異常」兩大條件</p>
+    </div>
+  </div>
+
+  <div class="section-label">觸發條件（需全部符合，AND 關係）</div>
+  <div class="conditions-grid">
+    <div class="cond-card must">
+      <div class="cond-label">條件一：累積漲跌幅</div>
+      <div class="cond-body">
+        近 <span class="val-pill">6</span> 個營業日累積漲跌幅
+        <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">27%</span></div>
+        且與全體及同類股平均差幅均 <span class="val-pill">≥20%</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件二：成交量放大倍數</div>
+      <div class="cond-body">
+        當日成交量 ÷ 近 <span class="val-pill">60</span> 日日平均成交量
+        <div class="formula"><span class="op">放大倍數</span> <span class="op">≥</span> <span class="val">5倍</span></div>
+        且放大倍數與全體平均值相差 <span class="val-pill">≥4倍</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>轉換公司債、交換公司債、非分離型附認股權公司債/特別股、各類權證、ETF、主動ETF、指數投資證券等</li>
+      <li>計算期間有除權除息等非交易原因，計算時排除</li>
+      <li>當日週轉率未達 <span class="val-pill">1%</span>，或成交量未達 <span class="val-pill">300</span> 交易單位</li>
+      <li>同類未達5家不適用類股條件；本益比負值或達65倍不適用類股條件</li>
+      <li>前一營業日溢(折)價比率未超過10%，或方向相反</li>
+      <li>實收資本額未達 NT$8,000萬 之股票不適用全體、同類及成交量條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ④ 漲跌 + 週轉率過高 -->
+<div class="panel" id="panel-3">
+  <div class="criterion-title">
+    <span class="criterion-num green">第四款</span>
+    <div>
+      <h2>累積漲跌異常，且當日週轉率過高</h2>
+      <p>需同時符合「價格異常」與「週轉率過高」兩大條件</p>
+    </div>
+  </div>
+
+  <div class="section-label">觸發條件（需全部符合）</div>
+  <div class="conditions-grid">
+    <div class="cond-card must">
+      <div class="cond-label">條件一：累積漲跌幅</div>
+      <div class="cond-body">
+        近 <span class="val-pill">6</span> 個營業日累積漲跌幅
+        <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">27%</span></div>
+        且與全體及同類股平均差幅均 <span class="val-pill">≥20%</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件二：週轉率</div>
+      <div class="cond-body">
+        當日週轉率
+        <div class="formula"><span class="op">週轉率</span> <span class="op">&gt;</span> <span class="val">5%</span></div>
+        且週轉率與全體平均值的差幅 <span class="val-pill">≥3%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>轉換公司債、交換公司債、非分離型附認股權公司債/特別股、各類權證、ETF、主動ETF、指數投資證券等</li>
+      <li>計算期間有除權除息等非交易原因，計算時排除</li>
+      <li>同類未達5家不適用類股條件；本益比負值或達65倍不適用類股條件</li>
+      <li>前一營業日溢(折)價比率未超過10%，或方向相反</li>
+      <li>實收資本額未達 NT$8,000萬 之股票不適用全體及同類條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ⑤ 漲跌 + 券商集中 -->
+<div class="panel" id="panel-4">
+  <div class="criterion-title">
+    <span class="criterion-num">第五款</span>
+    <div>
+      <h2>累積漲跌異常，且券商受託成交量比率過高</h2>
+      <p>需同時符合「價格異常」與「單一券商集中度過高」兩大條件</p>
+    </div>
+  </div>
+
+  <div class="section-label">觸發條件（需全部符合）</div>
+  <div class="conditions-grid">
+    <div class="cond-card must">
+      <div class="cond-label">條件一：累積漲跌幅</div>
+      <div class="cond-body">
+        近 <span class="val-pill">6</span> 個營業日累積漲跌幅
+        <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">27%</span></div>
+        且與全體及同類股平均差幅均 <span class="val-pill">≥20%</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件二：券商集中度</div>
+      <div class="cond-body">
+        單一券商當日受託買進或賣出數量占總成交量
+        <div class="formula"><span class="op">比率</span> <span class="op">&gt;</span> <span class="val">20%</span></div>
+        設有分支機構者每支機構可加 <span class="val-pill">+1%</span>，合計上限 <span class="val-pill red">30%</span><br>
+        且逾 <span class="val-pill">300</span> 交易單位以上
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>轉換公司債、交換公司債、非分離型附認股權公司債/特別股、債券換股權利書、股款繳納憑證等</li>
+      <li>計算期間有除權除息等非交易原因，計算時排除</li>
+      <li>同類未達5家不適用類股條件；本益比負值或達65倍不適用類股條件</li>
+      <li>前一營業日溢(折)價比率未超過10%，或方向相反</li>
+      <li>實收資本額未達 NT$8,000萬 之股票不適用全體、同類及成交量條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ⑥ 本益比+淨值比 -->
+<div class="panel" id="panel-5">
+  <div class="criterion-title">
+    <span class="criterion-num blue">第六款</span>
+    <div>
+      <h2>本益比、股價淨值比異常且週轉率過高</h2>
+      <p>需同時符合本益比、淨值比、週轉率三大條件，並符合產業、券商或投資人集中度三者之一</p>
+    </div>
+  </div>
+
+  <div class="section-label">觸發條件（需全部符合）</div>
+  <div class="conditions-grid">
+    <div class="cond-card must">
+      <div class="cond-label">條件一：本益比</div>
+      <div class="cond-body">
+        本益比為負值，<strong>或</strong>達 <span class="val-pill">65倍</span> 以上且超過全體有價證券加權平均值之 <span class="val-pill">2倍</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件二：股價淨值比</div>
+      <div class="cond-body">
+        股價淨值比達 <span class="val-pill">4倍</span> 以上且超過全體有價證券加權平均值之 <span class="val-pill">2倍</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件三：週轉率</div>
+      <div class="cond-body">
+        當日週轉率 <span class="val-pill">≥5%</span>，且成交量達 <span class="val-pill">2,000</span> 交易單位以上
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:8px">條件四：符合以下任一情形</div>
+  <div class="conditions-grid">
+    <div class="cond-card">
+      <div class="cond-label">情形(一)：產業淨值比偏高</div>
+      <div class="cond-body">
+        股價淨值比較所屬產業全體加權平均值
+        <div class="formula"><span class="op">偏高倍數</span> <span class="op">≥</span> <span class="val">2倍</span></div>
+      </div>
+    </div>
+    <div class="cond-card">
+      <div class="cond-label">情形(二)：券商集中</div>
+      <div class="cond-body">
+        單一券商當日買進或賣出成交金額 <span class="val-pill">≥NT$1億</span>，且占總成交金額 <span class="val-pill">≥10%</span><br>
+        （設分支機構每支加1%，合計上限25%）
+      </div>
+    </div>
+    <div class="cond-card">
+      <div class="cond-label">情形(三)：投資人集中</div>
+      <div class="cond-body">
+        任一投資人當日買進或賣出成交金額 <span class="val-pill">≥NT$1億</span>，且占總成交金額 <span class="val-pill">≥10%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">實收資本額未達 NT$8,000萬 之股票，上述成交金額門檻降至 <strong>二分之一</strong>（即 NT$5,000萬）</div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>非普通股之有價證券（如特別股、各類權證等）</li>
+      <li>實收資本額未達 NT$8,000萬 之股票不適用全體、同類及成交量條件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ⑦ 漲跌 + 券資比 -->
+<div class="panel" id="panel-6">
+  <div class="criterion-title">
+    <span class="criterion-num orange">第七款</span>
+    <div>
+      <h2>累積漲跌異常，且券資比明顯放大</h2>
+      <p>需同時符合「價格異常」與「融券融資比率異常放大」兩大條件</p>
+    </div>
+  </div>
+
+  <div class="section-label">觸發條件（需全部符合）</div>
+  <div class="conditions-grid">
+    <div class="cond-card must">
+      <div class="cond-label">條件一：累積漲跌幅</div>
+      <div class="cond-body">
+        近 <span class="val-pill">6</span> 個營業日累積漲跌幅
+        <div class="formula"><span class="op">|漲跌%|</span> <span class="op">&gt;</span> <span class="val">27%</span></div>
+        且與全體及同類股平均差幅均 <span class="val-pill">≥20%</span>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件二：券資比基礎門檻</div>
+      <div class="cond-body">
+        前一營業日券資比 <span class="val-pill">≥10%</span>，且同時符合：
+        <div class="formula">
+          <span class="var">融資使用率</span> <span class="op">≥</span> <span class="val">20%</span><br>
+          <span class="var">融券使用率</span> <span class="op">≥</span> <span class="val">10%</span>
+        </div>
+      </div>
+    </div>
+    <div class="cond-card must">
+      <div class="cond-label">條件三：券資比放大倍數</div>
+      <div class="cond-body">
+        前一營業日券資比，較近 <span class="val-pill">6</span> 個營業日（自前一日起）最低券資比
+        <div class="formula"><span class="op">放大倍數</span> <span class="op">≥</span> <span class="val">4倍</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exception-block">
+    <div class="exc-title">除外情形</div>
+    <ul class="exc-list">
+      <li>股票初次上櫃採無升降幅度限制期間</li>
+      <li>計算期間有除權除息等非交易原因，計算時排除</li>
+      <li>同類未達5家不適用類股條件；本益比負值或達65倍不適用類股條件</li>
+      <li>前一營業日券資比低於前二個營業日者（即當天券資比正在下降中）</li>
+      <li>前一營業日溢(折)價比率未超過10%，或方向相反</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ⑧ TDR溢折價 -->
+<div class="panel" id="panel-7">
+  <div class="criterion-title">
+    <span class="criterion-num green">第八款</span>
+    <div>
+      <h2>臺灣存託憑證（TDR）溢折價百分比異常</h2>
+      <p>依公開資訊觀測站公告之前一日溢折價，符合下列三種情形之一即觸發</p>
+    </div>
+  </div>
+
+  <div class="variant-tabs">
+    <div class="variant-tab active" onclick="showVariant('c8',0,this)">情形一：溢價 &gt;30%</div>
+    <div class="variant-tab" onclick="showVariant('c8',1,this)">情形二：折價 &gt;30%</div>
+    <div class="variant-tab" onclick="showVariant('c8',2,this)">情形三：溢價 &gt;80%</div>
+  </div>
+
+  <div id="c8-0" class="variant-panel active">
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">溢折價門檻</div>
+        <div class="cond-body">
+          前一營業日 TDR 溢價比率
+          <div class="formula"><span class="op">溢價%</span> <span class="op">&gt;</span> <span class="val">30%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">價格位置條件</div>
+        <div class="cond-body">
+          當日最後成交價須為近 <span class="val-pill">6</span> 個營業日最高者<br>
+          <span style="color:var(--text3);font-size:12px;">（若近5日無成交價，則當日須高於開盤參考價）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="c8-1" class="variant-panel">
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">溢折價門檻</div>
+        <div class="cond-body">
+          前一營業日 TDR 折價比率
+          <div class="formula"><span class="op">折價%</span> <span class="op">&gt;</span> <span class="val">30%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">價格位置條件</div>
+        <div class="cond-body">
+          當日最後成交價須為近 <span class="val-pill">6</span> 個營業日最低者<br>
+          <span style="color:var(--text3);font-size:12px;">（若近5日無成交價，則當日須低於開盤參考價）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="c8-2" class="variant-panel">
+    <div class="conditions-grid">
+      <div class="cond-card must">
+        <div class="cond-label">溢折價門檻</div>
+        <div class="cond-body">
+          前一營業日 TDR 溢價比率
+          <div class="formula"><span class="op">溢價%</span> <span class="op">&gt;</span> <span class="val">80%</span></div>
+        </div>
+      </div>
+      <div class="cond-card must">
+        <div class="cond-label">價格位置條件</div>
+        <div class="cond-body">
+          當日最後成交價須 <span class="val-pill green">高於當日開盤參考價</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">計算近6日最高/最低成交價時，若有除權、除息等非交易原因造成價格變動，排除該因素</div>
+</div>
+
+</main>
+
+<script>
+function showPanel(idx, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + idx).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showVariant(prefix, idx, btn) {
+  const group = btn.closest('.panel') || document.body;
+  const panels = group.querySelectorAll('[id^="' + prefix + '-"]');
+  panels.forEach(p => p.classList.remove('active'));
+  const tabs = btn.parentElement.querySelectorAll('.variant-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  document.getElementById(prefix + '-' + idx).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
